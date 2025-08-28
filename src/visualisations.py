@@ -105,12 +105,14 @@ def create_driving_dispersion_chart(stats: Dict[str, Any]) -> go.Figure:
         fig.add_shape(type="rect", x0=x0, y0=y0, x1=x1, y1=y1,
                       line=dict(color="White"), fillcolor=properties['color'], layer='below')
         
-        # Use a different text color for the light green fairway block
         text_color = "Black" if name == "Fairway" else "White"
         
+        # Always format the percentage, even if it's zero
+        display_text = f"{pct:.1f}%"
+        
         fig.add_annotation(x=properties['pos'][0], y=properties['pos'][1],
-                           text=f"<b>{name}</b><br><span style='font-size: 20px;'>{pct:.1f}%</span>",
-                           showarrow=False, font=dict(color=text_color, size=14), align="center")
+                           text=f"<b>{name}</b><br>{display_text}",
+                           showarrow=False, font=dict(color=text_color, size=16), align="center")
 
     fig.update_layout(
         title_text='Tee Shot Dispersion',
@@ -156,9 +158,17 @@ def create_distance_by_location_chart(stats: Dict[str, Any]) -> go.Figure:
         
         text_color = "Black" if name == "Fairway" else "White"
         
+        # Determine the text to display
+        if name in ['OB Left', 'OB Right']:
+            display_text = "—"
+        elif dist == 0:
+            display_text = "—"
+        else:
+            display_text = f"{dist:.0f} yds"
+        
         fig.add_annotation(x=properties['pos'][0], y=properties['pos'][1],
-                           text=f"<b>{name}</b><br><span style='font-size: 20px;'>{dist:.0f} yds</span>",
-                           showarrow=False, font=dict(color=text_color, size=14), align="center")
+                           text=f"<b>{name}</b><br>{display_text}",
+                           showarrow=False, font=dict(color=text_color, size=16), align="center")
 
     fig.update_layout(
         title_text='Average Distance by Location',
@@ -169,7 +179,6 @@ def create_distance_by_location_chart(stats: Dict[str, Any]) -> go.Figure:
         height=400
     )
     return fig
-
 
 # --- Approach Visualizations ---
 
