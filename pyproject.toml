@@ -1,0 +1,29 @@
+# This file defines the project metadata and dependencies for Poetry.
+
+[tool.poetry]
+# Project metadata
+name = "golf-analytics"
+version = "0.1.0"
+description = "A Streamlit dashboard to analyse personal golf performance data from Google Sheets."
+authors = ["Andy Neary <neary.andrew.j@gmail.com>"]
+readme = "README.md"
+packages = [{include = "src"}]
+
+[tool.poetry.dependencies]
+# Main application dependencies
+python = "^3.13"  # Specifies Python version 3.13 or newer
+streamlit = "^1.30.0"
+st-gsheets-connection = "^0.1.0"
+pandas = "^2.1.0"
+gspread = "^5.12.0"
+plotly = "^5.18.0"
+google-auth-oauthlib = "^1.1.0"
+
+[tool.poetry.group.dev.dependencies]
+# Development-specific dependencies, like testing tools
+pytest = "^7.4.0"
+
+[build-system]
+# Standard build system configuration for Poetry projects
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
