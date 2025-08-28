@@ -27,7 +27,6 @@ st.set_page_config(
 st.title("⛳️ Golf Performance Analytics Dashboard")
 
 # --- Load Data ---
-# This function is cached, so it only runs when the data needs to be refreshed.
 raw_df = load_data()
 
 if raw_df.empty:
@@ -37,7 +36,7 @@ else:
     st.sidebar.header("Filters")
     
     # Filter by Course
-    courses = raw_df['Course'].unique()
+    courses = sorted(raw_df['Course'].unique())
     selected_courses = st.sidebar.multiselect("Select Course(s)", courses, default=courses)
     
     # Filter by Date Range
@@ -50,22 +49,56 @@ else:
         max_value=max_date
     )
 
-    # Apply filters to the DataFrame
+    # Apply initial filters
     filtered_df = raw_df[
         (raw_df['Course'].isin(selected_courses)) &
         (raw_df['Date'].dt.date >= selected_date_range[0]) &
         (raw_df['Date'].dt.date <= selected_date_range[1])
     ]
 
-    if filtered_df.empty:
+    # --- Round Selection Filter ---
+    st.sidebar.header("Round Selection")
+    
+    # Get unique rounds, sorted by date
+    unique_rounds = filtered_df[['Round ID', 'Date']].drop_duplicates().sort_values(by='Date', ascending=False)
+    
+    filter_type = st.sidebar.selectbox(
+        "Filter by Rounds",
+        ["All Rounds", "Most Recent Rounds", "Best X of Last Y Rounds"]
+    )
+
+    final_df = filtered_df.copy()
+
+    if filter_type == "Most Recent Rounds" and not unique_rounds.empty:
+        num_recent = st.sidebar.number_input("Number of recent rounds", min_value=1, max_value=len(unique_rounds), value=min(3, len(unique_rounds)))
+        recent_round_ids = unique_rounds.head(num_recent)['Round ID']
+        final_df = filtered_df[filtered_df['Round ID'].isin(recent_round_ids)]
+
+    elif filter_type == "Best X of Last Y Rounds" and not unique_rounds.empty:
+        last_y = st.sidebar.number_input("Last Y rounds to consider", min_value=1, max_value=len(unique_rounds), value=min(20, len(unique_rounds)))
+        best_x = st.sidebar.number_input("Best X rounds to select", min_value=1, max_value=last_y, value=min(8, last_y))
+        
+        # Get the last Y rounds
+        last_y_round_ids = unique_rounds.head(last_y)['Round ID']
+        last_y_df = filtered_df[filtered_df['Round ID'].isin(last_y_round_ids)]
+        
+        # Calculate average stableford points for each of these rounds and select the best (highest)
+        round_scores = last_y_df.groupby('Round ID')['Score'].mean().nlargest(best_x)
+        
+        # Filter for the best X rounds
+        best_round_ids = round_scores.index
+        final_df = filtered_df[filtered_df['Round ID'].isin(best_round_ids)]
+
+
+    if final_df.empty:
         st.warning("No data available for the selected filters.")
     else:
         # --- Calculate All Stats ---
-        scoring_stats = calculate_scoring_stats(filtered_df)
-        driving_stats = calculate_driving_stats(filtered_df)
-        approach_stats = calculate_approach_stats(filtered_df)
-        short_game_stats = calculate_short_game_stats(filtered_df)
-        putting_stats = calculate_putting_stats(filtered_df)
+        scoring_stats = calculate_scoring_stats(final_df)
+        driving_stats = calculate_driving_stats(final_df)
+        approach_stats = calculate_approach_stats(final_df)
+        short_game_stats = calculate_short_game_stats(final_df)
+        putting_stats = calculate_putting_stats(final_df)
 
         # --- Dashboard Layout (using tabs) ---
         tab1, tab2, tab3, tab4, tab5 = st.tabs(["Scoring", "Driving", "Approach", "Short Game", "Putting"])
