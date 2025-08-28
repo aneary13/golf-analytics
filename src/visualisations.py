@@ -75,21 +75,101 @@ def create_score_distribution_chart(stats: Dict[str, Any], par_type: int, by_poi
 
 def create_driving_dispersion_chart(stats: Dict[str, Any]) -> go.Figure:
     """
-    Creates a pie chart showing the dispersion of tee shots.
+    Creates a graphic representing a fairway to show tee shot dispersion.
 
     Args:
         stats (Dict[str, Any]): The dictionary of driving statistics.
 
     Returns:
-        go.Figure: A Plotly pie chart figure.
+        go.Figure: A Plotly figure with shapes and annotations.
     """
-    dispersion_stats = stats.get('dispersion', {})
-    labels = list(dispersion_stats.keys())
-    values = list(dispersion_stats.values())
+    dispersion = stats.get('dispersion', {})
+    
+    # Define the zones and their properties
+    zones = {
+        'OB Left': {'shape': (0, 1, 1, 5), 'color': '#FF9999', 'pos': (0.5, 3)},
+        'Left':    {'shape': (1, 1, 2, 5), 'color': '#6B8E23', 'pos': (1.5, 3)},
+        'Fairway': {'shape': (2, 1, 3, 5), 'color': '#90EE90', 'pos': (2.5, 3)},
+        'Right':   {'shape': (3, 1, 4, 5), 'color': '#6B8E23', 'pos': (3.5, 3)},
+        'OB Right':{'shape': (4, 1, 5, 5), 'color': '#FF9999', 'pos': (4.5, 3)},
+        'Short':   {'shape': (1, 0, 4, 1), 'color': '#F0E68C', 'pos': (2.5, 0.5)},
+    }
 
-    fig = go.Figure(data=[go.Pie(labels=labels, values=values)])
-    fig.update_layout(title_text='Tee Shot Dispersion')
+    fig = go.Figure()
+
+    # Add shapes and annotations for each zone
+    for name, properties in zones.items():
+        x0, y0, x1, y1 = properties['shape']
+        pct = dispersion.get(name, 0)
+        
+        fig.add_shape(type="rect", x0=x0, y0=y0, x1=x1, y1=y1,
+                      line=dict(color="White"), fillcolor=properties['color'], layer='below')
+        
+        # Use a different text color for the light green fairway block
+        text_color = "Black" if name == "Fairway" else "White"
+        
+        fig.add_annotation(x=properties['pos'][0], y=properties['pos'][1],
+                           text=f"<b>{name}</b><br><span style='font-size: 20px;'>{pct:.1f}%</span>",
+                           showarrow=False, font=dict(color=text_color, size=14), align="center")
+
+    fig.update_layout(
+        title_text='Tee Shot Dispersion',
+        xaxis=dict(visible=False, range=[0, 5]),
+        yaxis=dict(visible=False, range=[0, 5]),
+        template='plotly_white',
+        margin=dict(l=20, r=20, t=50, b=20),
+        height=400
+    )
     return fig
+
+def create_distance_by_location_chart(stats: Dict[str, Any]) -> go.Figure:
+    """
+    Creates a graphic representing a fairway to show average tee shot distance by location.
+
+    Args:
+        stats (Dict[str, Any]): The dictionary of driving statistics.
+
+    Returns:
+        go.Figure: A Plotly figure with shapes and annotations.
+    """
+    avg_distances = stats.get('avg_dist_by_location', {})
+    
+    # Define the zones and their properties (same as dispersion chart)
+    zones = {
+        'OB Left': {'shape': (0, 1, 1, 5), 'color': '#FF9999', 'pos': (0.5, 3)},
+        'Left':    {'shape': (1, 1, 2, 5), 'color': '#6B8E23', 'pos': (1.5, 3)},
+        'Fairway': {'shape': (2, 1, 3, 5), 'color': '#90EE90', 'pos': (2.5, 3)},
+        'Right':   {'shape': (3, 1, 4, 5), 'color': '#6B8E23', 'pos': (3.5, 3)},
+        'OB Right':{'shape': (4, 1, 5, 5), 'color': '#FF9999', 'pos': (4.5, 3)},
+        'Short':   {'shape': (1, 0, 4, 1), 'color': '#F0E68C', 'pos': (2.5, 0.5)},
+    }
+
+    fig = go.Figure()
+
+    # Add shapes and annotations for each zone
+    for name, properties in zones.items():
+        x0, y0, x1, y1 = properties['shape']
+        dist = avg_distances.get(name, 0)
+        
+        fig.add_shape(type="rect", x0=x0, y0=y0, x1=x1, y1=y1,
+                      line=dict(color="White"), fillcolor=properties['color'], layer='below')
+        
+        text_color = "Black" if name == "Fairway" else "White"
+        
+        fig.add_annotation(x=properties['pos'][0], y=properties['pos'][1],
+                           text=f"<b>{name}</b><br><span style='font-size: 20px;'>{dist:.0f} yds</span>",
+                           showarrow=False, font=dict(color=text_color, size=14), align="center")
+
+    fig.update_layout(
+        title_text='Average Distance by Location',
+        xaxis=dict(visible=False, range=[0, 5]),
+        yaxis=dict(visible=False, range=[0, 5]),
+        template='plotly_white',
+        margin=dict(l=20, r=20, t=50, b=20),
+        height=400
+    )
+    return fig
+
 
 # --- Approach Visualizations ---
 
