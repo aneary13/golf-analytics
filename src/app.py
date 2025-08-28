@@ -12,6 +12,7 @@ from src.visualisations import (
     create_scoring_bar_chart,
     create_score_distribution_chart,
     create_driving_dispersion_chart,
+    create_distance_by_location_chart,
     create_approach_dispersion_chart,
     create_putt_distribution_chart,
 )
@@ -127,9 +128,11 @@ else:
             col1, col2, col3 = st.columns(3)
             col1.metric("FIR %", f"{driving_stats.get('fir_pct', 0):.1f}%")
             col2.metric("Ball in Play %", f"{driving_stats.get('ball_in_play_rate_pct', 0):.1f}%")
-            col3.metric("Avg Distance", f"{driving_stats.get('avg_drive_distance', 0):.1f} yds")
+            col3.metric("Avg. Distance", f"{driving_stats.get('avg_drive_distance', 0):.1f} yds")
 
             st.plotly_chart(create_driving_dispersion_chart(driving_stats), use_container_width=True)
+            st.plotly_chart(create_distance_by_location_chart(driving_stats), use_container_width=True)
+
 
         with tab3:
             st.header("Approach Performance")
