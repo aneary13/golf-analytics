@@ -1,32 +1,30 @@
-import streamlit as st
 import pandas as pd
+import streamlit as st
 from streamlit_gsheets import GSheetsConnection
 
 # Define the columns we expect to be numeric for data cleaning
 NUMERIC_COLS = [
-    'Round ID', 
-    'Hole', 
-    'Distance', 
-    'Par', 
-    'Shots', 
-    'Tee Shot Distance',
-    'Approach Distance', 
-    'Shots Inside 100y', 
-    'Putts', 
-    'Strokes', 
-    'Score'
+    "Round ID",
+    "Hole",
+    "Distance",
+    "Par",
+    "Shots",
+    "Tee Shot Distance",
+    "Approach Distance",
+    "Shots Inside 100y",
+    "Putts",
+    "Strokes",
+    "Score",
 ]
-BINARY_COLS = [
-    'FIR', 
-    'GIR'
-]
+BINARY_COLS = ["FIR", "GIR"]
+
 
 def load_data() -> pd.DataFrame:
     """
-    Connects to Google Sheets, fetches the data, and returns it as a cleaned pandas DataFrame.
+    Connects to Google Sheets, fetches the data, and returns a cleaned pandas DataFrame.
 
     Returns:
-        pd.DataFrame: A DataFrame containing the golf data with appropriate data types and cleaning applied. 
+        pd.DataFrame: A clean DataFrame containing the data with appropriate data types.
                       Returns an empty DataFrame if the connection fails.
     """
     try:
@@ -34,30 +32,27 @@ def load_data() -> pd.DataFrame:
         conn = st.connection("gsheets", type=GSheetsConnection)
 
         # Read the data from the default worksheet
-        df = conn.read(
-            worksheet='Raw Data',
-            # usecols=lambda x: x not in ['']  # use a lambda function to ignore empty columns
-        )
+        df = conn.read(worksheet="Raw Data")
 
         # --- Data Cleaning and Type Conversion ---
         # Drop rows where all elements are NaN (empty rows from the sheet)
-        df.dropna(how='all', inplace=True)
+        df.dropna(how="all", inplace=True)
 
         # Convert date column to datetime objects
-        if 'Date' in df.columns:
-            df['Date'] = pd.to_datetime(df['Date'], errors='coerce', dayfirst=True)
+        if "Date" in df.columns:
+            df["Date"] = pd.to_datetime(df["Date"], errors="coerce", dayfirst=True)
 
         # Convert binary 'Yes'/'No' columns to 1/0 for calculations.
         # 'N/A' and other values will become NaN.
-        binary_cols = ['FIR', 'GIR']
+        binary_cols = ["FIR", "GIR"]
         for col in binary_cols:
             if col in df.columns:
-                df[col] = df[col].map({'Yes': 1, 'No': 0})
+                df[col] = df[col].map({"Yes": 1, "No": 0})
 
         # Convert remaining numeric columns, coercing errors to NaN
         for col in NUMERIC_COLS:
             if col in df.columns:
-                df[col] = pd.to_numeric(df[col], errors='coerce')
+                df[col] = pd.to_numeric(df[col], errors="coerce")
 
         # Replace empty strings with None for consistency
         df.replace("", None, inplace=True)
