@@ -20,8 +20,20 @@ plotly = "^5.18.0"
 google-auth-oauthlib = "^1.1.0"
 
 [tool.poetry.group.dev.dependencies]
-# Development-specific dependencies, like testing tools
+# Development-specific dependencies
 pytest = "^7.4.0"
+black = "^25.1.0"
+ruff = "^0.12.11"
+
+[tool.black]
+line-length = 88
+target-version = ['py313']
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
 
 [build-system]
 # Standard build system configuration for Poetry projects
