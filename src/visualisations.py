@@ -184,20 +184,63 @@ def create_distance_by_location_chart(stats: Dict[str, Any]) -> go.Figure:
 
 def create_approach_dispersion_chart(stats: Dict[str, Any]) -> go.Figure:
     """
-    Creates a pie chart showing the dispersion of approach shots.
+    Creates a graphic representing a green to show approach shot dispersion.
 
     Args:
         stats (Dict[str, Any]): The dictionary of approach statistics.
 
     Returns:
-        go.Figure: A Plotly pie chart figure.
+        go.Figure: A Plotly figure with shapes and annotations.
     """
-    dispersion_stats = stats.get('approach_dispersion', {})
-    labels = list(dispersion_stats.keys())
-    values = list(dispersion_stats.values())
+    dispersion = stats.get('approach_dispersion', {})
+    
+    fig = go.Figure()
 
-    fig = go.Figure(data=[go.Pie(labels=labels, values=values)])
-    fig.update_layout(title_text='Approach Shot Dispersion')
+    # Define colors
+    green_color = '#A8C9A8'
+    fringe_color = '#7CA57C'
+    
+    # Add shapes for green and fringe
+    fig.add_shape(type="circle", x0=0, y0=0, x1=6, y1=6,
+                  line_color=fringe_color, fillcolor=fringe_color, layer='below')
+    fig.add_shape(type="circle", x0=1, y0=1, x1=5, y1=5,
+                  line_color=green_color, fillcolor=green_color, layer='below')
+
+    # Add flagstick
+    fig.add_shape(type="line", x0=3, y0=3, x1=3, y1=4.1, line=dict(color="Black", width=1))
+    fig.add_trace(go.Scatter(x=[3.082], y=[4.14], mode='text', text='🚩', textfont=dict(color='red', size=25)))
+
+
+    # Define annotation positions and map to data keys
+    annotations = {
+        'Long':  {'pos': (3, 5.5), 'data_key': 'Long'},
+        'Short': {'pos': (3, 0.5), 'data_key': 'Short'},
+        'Left':  {'pos': (0.5, 3), 'data_key': 'Left'},
+        'Right': {'pos': (5.5, 3), 'data_key': 'Right'},
+        'Green': {'pos': (3, 2.5), 'data_key': 'Green'},
+    }
+
+    # Add annotations for each zone
+    for name, properties in annotations.items():
+        pct = dispersion.get(properties['data_key'], 0)
+        text_color = "Black" if name == "Green" else "White"
+        display_text = f"<b>{name}</b><br>{pct:.1f}%"
+        
+        fig.add_annotation(
+            x=properties['pos'][0], y=properties['pos'][1],
+            text=display_text,
+            showarrow=False, font=dict(color=text_color, size=16), align="center"
+        )
+
+    fig.update_layout(
+        title_text='Approach Shot Dispersion',
+        xaxis=dict(visible=False, range=[-1, 7]),
+        yaxis=dict(visible=False, range=[-1, 7]),
+        template='plotly_white',
+        margin=dict(l=20, r=20, t=50, b=20),
+        height=500,
+        showlegend=False
+    )
     return fig
 
 # --- Putting Visualizations ---
