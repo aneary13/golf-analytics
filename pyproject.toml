@@ -23,8 +23,8 @@ google-auth-oauthlib = "^1.1.0"
 # Development-specific dependencies
 pytest = "^7.4.0"
 black = "^25.1.0"
-ruff = "^0.12.11"
-pre-commit = "^4.3.0"
+ruff = "0.12.11"
+pre-commit = "4.3.0"
 
 [tool.black]
 line-length = 88
