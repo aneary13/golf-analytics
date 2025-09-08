@@ -1,18 +1,35 @@
 repos:
--   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
+
+-   repo: https://gitlab.com/vojko.pribudic.foss/pre-commit-update
+    rev: v0.8.0
     hooks:
+    # Automatically update pre-commit hooks
+    -   id: pre-commit-update
+
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+    # Basic file checks
     -   id: check-yaml
     -   id: end-of-file-fixer
     -   id: trailing-whitespace
 
--   repo: https://github.com/psf/black
-    rev: 25.1.0
-    hooks:
-    -   id: black
-
 -   repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.12.11
+    rev: v0.12.12
     hooks:
+    # Hook to run the Ruff formatter
+    -   id: ruff-format
+    # Hook to run the Ruff linter and import sorter
     -   id: ruff
+        # --fix tells ruff to automatically fix any issues it finds
         args: [--fix]
+
+-   repo: https://github.com/python-poetry/poetry
+    rev: 2.1.4
+    hooks:
+    # Hook to run `poetry check`
+    -   id: poetry-check
+    # Hook to ensure `poetry.lock` is up-to-date
+    -   id: poetry-lock
+    # Hook to install dependencies from `poetry.lock`
+    -   id: poetry-install
