@@ -1,6 +1,7 @@
 name: CI Pipeline
 
-# Trigger the workflow on pushes to the main branch, on pull requests, and allow for manual triggering from the GitHub UI.
+# Trigger the workflow on pushes to the main branch, on pull requests,
+# and allow for manual triggering from the GitHub UI.
 on:
   push:
     branches: [ "main" ]
