@@ -1,11 +1,12 @@
 name: CI Pipeline
 
-# Triggers the workflow on pushes to the main branch and on pull requests
+# Trigger the workflow on pushes to the main branch, on pull requests, and allow for manual triggering from the GitHub UI.
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -17,7 +18,7 @@ jobs:
         python-version: ["3.13"]
 
     steps:
-    # Step 1: Check out the repository's code
+    # Step 1: Check out your repository's code
     - uses: actions/checkout@v4
 
     # Step 2: Set up the specified version of Python
