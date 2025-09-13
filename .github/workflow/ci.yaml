@@ -1,0 +1,56 @@
+name: CI Pipeline
+
+# Triggers the workflow on pushes to the main branch and on pull requests
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    # Run the job on the latest version of Ubuntu
+    runs-on: ubuntu-latest
+    strategy:
+      # Test against a specific Python version
+      matrix:
+        python-version: ["3.13"]
+
+    steps:
+    # Step 1: Check out the repository's code
+    - uses: actions/checkout@v4
+
+    # Step 2: Set up the specified version of Python
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    # Step 3: Install Poetry
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+
+    # Step 4: Cache Python dependencies for faster builds
+    - name: Cache dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pypoetry/virtualenvs
+        key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-poetry-
+
+    # Step 5: Install project dependencies using the poetry.lock file
+    - name: Install dependencies
+      run: poetry install
+
+    # Step 6: Run the linter (Ruff) to check for issues
+    - name: Lint with Ruff
+      run: poetry run ruff check .
+
+    # Step 7: Check formatting with Ruff (in check-only mode)
+    - name: Check formatting with Ruff
+      run: poetry run ruff format . --check
+
+    # Step 8: Run the unit tests with pytest
+    - name: Run tests with pytest
+      run: poetry run pytest
