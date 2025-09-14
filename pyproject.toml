@@ -35,9 +35,25 @@ line-length = 88
 
 [tool.ruff.lint]
 # Linter settings: E/F/W are standard, I is for sorting imports
-select = ["E", "F", "W", "I"]
+select = [
+    "E", # pycodestyle
+    "F", # Pyflakes
+    "UP", # pyupgrade
+    "B", # flake8-bugbear
+    "SIM", # flake8-simplify
+    "I", # isort
+]
 
 [tool.ruff.format]
 # Formatter settings to mimic Black's style
 quote-style = "double"
 docstring-code-format = true
+
+[tool.pytest.ini_options]
+# Set the directory where pytest will look for tests
+testpaths = [
+    "tests",
+]
+# Add any common command-line options here
+# --import-mode=importlib is recommended for src layouts
+addopts = "--import-mode=importlib"
