@@ -1,9 +1,9 @@
-from typing import Any, Dict
+from typing import Any
 
 import pandas as pd
 
 
-def calculate_scoring_stats(df: pd.DataFrame) -> Dict[str, Any]:
+def calculate_scoring_stats(df: pd.DataFrame) -> dict[str, Any]:
     """
     Calculates all scoring-related statistics from the provided DataFrame.
 
@@ -64,7 +64,7 @@ def calculate_scoring_stats(df: pd.DataFrame) -> Dict[str, Any]:
     return stats
 
 
-def calculate_driving_stats(df: pd.DataFrame) -> Dict[str, Any]:
+def calculate_driving_stats(df: pd.DataFrame) -> dict[str, Any]:
     """
     Calculates all driving-related statistics from the provided DataFrame.
 
@@ -120,7 +120,7 @@ def calculate_driving_stats(df: pd.DataFrame) -> Dict[str, Any]:
     return stats
 
 
-def calculate_approach_stats(df: pd.DataFrame) -> Dict[str, Any]:
+def calculate_approach_stats(df: pd.DataFrame) -> dict[str, Any]:
     """
     Calculates all approach-related statistics from the provided DataFrame.
 
@@ -153,7 +153,7 @@ def calculate_approach_stats(df: pd.DataFrame) -> Dict[str, Any]:
     return stats
 
 
-def calculate_short_game_stats(df: pd.DataFrame) -> Dict[str, Any]:
+def calculate_short_game_stats(df: pd.DataFrame) -> dict[str, Any]:
     """
     Calculates all short game-related statistics from the provided DataFrame.
 
@@ -203,7 +203,7 @@ def calculate_short_game_stats(df: pd.DataFrame) -> Dict[str, Any]:
     return stats
 
 
-def calculate_putting_stats(df: pd.DataFrame) -> Dict[str, Any]:
+def calculate_putting_stats(df: pd.DataFrame) -> dict[str, Any]:
     """
     Calculates all putting-related statistics from the provided DataFrame.
 

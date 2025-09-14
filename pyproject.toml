@@ -1,6 +1,6 @@
 [project]
 name = "golf-analytics"
-version = "0.1.0"
+version = "1.0.0"
 description = "A Streamlit dashboard to analyse personal golf performance data from Google Sheets."
 authors = [
     { name = "Andy Neary", email = "neary.andrew.j@gmail.com" }
@@ -34,10 +34,25 @@ build-backend = "poetry.core.masonry.api"
 line-length = 88
 
 [tool.ruff.lint]
-# Linter settings: E/F/W are standard, I is for sorting imports
-select = ["E", "F", "W", "I"]
+# Linter settings
+select = [
+    "E", # pycodestyle
+    "F", # Pyflakes
+    "UP", # pyupgrade
+    "B", # flake8-bugbear
+    "SIM", # flake8-simplify
+    "I", # isort
+]
 
 [tool.ruff.format]
-# Formatter settings to mimic Black's style
+# Formatter settings
 quote-style = "double"
 docstring-code-format = true
+
+[tool.pytest.ini_options]
+# Set the directory where pytest will look for tests
+testpaths = [
+    "tests",
+]
+# --import-mode=importlib is recommended for src layouts
+addopts = "--import-mode=importlib"

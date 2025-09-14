@@ -12,15 +12,16 @@ The dashboard is deployed and publicly accessible via Streamlit Community Cloud.
 
 ---
 
-## ⛳️ Features
+## Features
 
--   **Live & Deployed:** Accessible from any device, including mobile.
--   **Dashboard Interface:** Clean, tab-based layout built with Streamlit.
--   **Dynamic Data:** Fetches the latest round data directly from a Google Sheet.
--   **Interactive Filters:** Filter your data by course, date range or most recent rounds.
--   **Comprehensive Stats:** Calculates metrics for all major facets of the game: Scoring, Driving, Approach, Short Game, and Putting.
--   **Interactive Visualizations:** Uses Plotly to create engaging and filterable charts.
--   **Secure:** Manages Google API credentials securely using Streamlit's secrets management.
+- **Live & Deployed:** Accessible from any device, including mobile.
+- **Dashboard Interface:** Clean, tab-based layout built with Streamlit.
+- **Dynamic Data:** Fetches the latest round data directly from a Google Sheet.
+- **Interactive Filters:** Filter data by course, date range, and round selection (All, Recent, Best of).
+- **Comprehensive Stats:** Calculates metrics for all major facets of the game: Scoring, Driving, Approach, Short Game, and Putting.
+- **Interactive Visualizations:** Uses Plotly to create engaging custom graphics.
+- **Automated Code Quality:** Uses Ruff for linting/formatting and pre-commit hooks to ensure code consistency.
+- **CI/CD Pipeline:** Deploys automatically to Streamlit Cloud via a GitHub Actions CI pipeline that runs tests on every push.
 
 ---
 
@@ -32,31 +33,66 @@ This project uses [Poetry](https://python-poetry.org/) for dependency and enviro
 
 ### Step-by-Step Instructions
 
-1.  **Clone the repository:**
-    ```bash
-    git clone <repository-url>
-    cd golf_analytics
-    ```
+1. **Clone the repository:**
 
-2.  **Install dependencies:**
-    This command will create a virtual environment and install all necessary packages from the `poetry.lock` file (make sure you have **Poetry** installed on your machine).
-    ```bash
-    poetry install
-    ```
+```bash
+git clone <repository-url>
+cd golf-analytics
+```
 
-3.  **Set up Google API Credentials:**
-    -   Follow the [Streamlit documentation](https://docs.streamlit.io/develop/tutorials/databases/private-gsheet) to get your Google service account credentials.
-    -   Create a file at `.streamlit/secrets.toml`.
-    -   Add your credentials to the `secrets.toml` file in the correct format.
+1. **Install dependencies:**
+
+This command creates a virtual environment and installs all packages from the `poetry.lock` file.
+
+```bash
+poetry install
+```
+
+1. **Set up Google API Credentials:**
+
+- Follow the [Streamlit documentation](https://docs.streamlit.io/develop/tutorials/databases/private-gsheet) to get your Google service account credentials.
+- Create a file at `.streamlit/secrets.toml` and add your credentials.
+
+1. **Install Pre-Commit Hooks:**
+
+This one-time setup command installs the hooks into your local Git repository.
+
+```bash
+poetry run pre-commit install
+```
 
 ---
 
-## ✅ Running Tests
+## Development
 
-This project uses `pytest` for unit testing. The tests are located in the `tests/` directory.
+### Running the App Locally
 
-To run the entire test suite, execute:
+To run the Streamlit application on your local machine:
+
+```bash
+poetry run streamlit run src/app.py
+```
+
+### Running Tests
+
+To run the entire unit test suite using pytest:
 
 ```bash
 poetry run pytest
+```
+
+### Formatting and Linting
+
+This project uses **Ruff** for all formatting, linting, and import sorting. While the pre-commit hooks automate this process, you can also run the commands manually.
+
+To format all files in the project:
+
+```bash
+poetry run ruff format .
+```
+
+To lint and automatically fix any issues found:
+
+```bash
+poetry run ruff check . --fix
 ```
