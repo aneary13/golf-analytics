@@ -34,7 +34,7 @@ build-backend = "poetry.core.masonry.api"
 line-length = 88
 
 [tool.ruff.lint]
-# Linter settings: E/F/W are standard, I is for sorting imports
+# Linter settings
 select = [
     "E", # pycodestyle
     "F", # Pyflakes
@@ -45,7 +45,7 @@ select = [
 ]
 
 [tool.ruff.format]
-# Formatter settings to mimic Black's style
+# Formatter settings
 quote-style = "double"
 docstring-code-format = true
 
@@ -54,6 +54,5 @@ docstring-code-format = true
 testpaths = [
     "tests",
 ]
-# Add any common command-line options here
 # --import-mode=importlib is recommended for src layouts
 addopts = "--import-mode=importlib"
