@@ -1,11 +1,11 @@
-from typing import Any, Dict
+from typing import Any
 
 import plotly.graph_objects as go
 
 # --- Scoring Visualizations ---
 
 
-def create_scoring_bar_chart(stats: Dict[str, Any]) -> go.Figure:
+def create_scoring_bar_chart(stats: dict[str, Any]) -> go.Figure:
     """
     Creates a bar chart showing the average strokes for Par 3s, 4s, and 5s.
 
@@ -43,7 +43,7 @@ def create_scoring_bar_chart(stats: Dict[str, Any]) -> go.Figure:
 
 
 def create_score_distribution_chart(
-    stats: Dict[str, Any], par_type: int, by_points: bool = False
+    stats: dict[str, Any], par_type: int, by_points: bool = False
 ) -> go.Figure:
     """
     Creates a donut chart showing the score distribution for a given par type.
@@ -89,7 +89,7 @@ def create_score_distribution_chart(
 # --- Driving Visualizations ---
 
 
-def create_driving_dispersion_chart(stats: Dict[str, Any]) -> go.Figure:
+def create_driving_dispersion_chart(stats: dict[str, Any]) -> go.Figure:
     """
     Creates a graphic representing a fairway to show tee shot dispersion.
 
@@ -154,7 +154,7 @@ def create_driving_dispersion_chart(stats: Dict[str, Any]) -> go.Figure:
     return fig
 
 
-def create_distance_by_location_chart(stats: Dict[str, Any]) -> go.Figure:
+def create_distance_by_location_chart(stats: dict[str, Any]) -> go.Figure:
     """
     Creates a graphic representing a fairway to show average drive distance by location.
 
@@ -197,9 +197,7 @@ def create_distance_by_location_chart(stats: Dict[str, Any]) -> go.Figure:
         text_color = "Black" if name == "Fairway" else "White"
 
         # Determine the text to display
-        if name in ["OB Left", "OB Right"]:
-            display_text = "—"
-        elif dist == 0:
+        if name in ["OB Left", "OB Right"] or dist == 0:
             display_text = "—"
         else:
             display_text = f"{dist:.0f} yds"
@@ -227,7 +225,7 @@ def create_distance_by_location_chart(stats: Dict[str, Any]) -> go.Figure:
 # --- Approach Visualizations ---
 
 
-def create_approach_dispersion_chart(stats: Dict[str, Any]) -> go.Figure:
+def create_approach_dispersion_chart(stats: dict[str, Any]) -> go.Figure:
     """
     Creates a graphic representing a green to show approach shot dispersion.
 
@@ -320,7 +318,7 @@ def create_approach_dispersion_chart(stats: Dict[str, Any]) -> go.Figure:
 # --- Putting Visualizations ---
 
 
-def create_putt_distribution_chart(stats: Dict[str, Any]) -> go.Figure:
+def create_putt_distribution_chart(stats: dict[str, Any]) -> go.Figure:
     """
     Creates a donut chart showing the distribution of putts per hole.
 
